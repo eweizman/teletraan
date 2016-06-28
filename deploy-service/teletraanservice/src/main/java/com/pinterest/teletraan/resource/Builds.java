@@ -157,6 +157,12 @@ public class Builds {
         return manager.getEffectiveTagsWithBuilds(builds);
     }
 
+    @GET
+    @Path("/old")
+    public List<String> getOldBuilds() throws Exception{
+        return buildDAO.getOldBuilds(6);
+    }
+
     @POST
     @ApiOperation(
             value = "Publish a build",
