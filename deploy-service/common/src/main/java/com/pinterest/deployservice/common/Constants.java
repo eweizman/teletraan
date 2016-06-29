@@ -38,6 +38,7 @@ public class Constants {
     public static final String AUTO_PROMOTER_NAME = "AutoPromoter";
     public static final int DEFAULT_DEPLOY_NUM = 5000;
     public static final int DEFAULT_DEPLOY_DAY = 365;
+    public static final int DEFAULT_MONTHS_UNTIL_OLD_BUILD = 6;
 
     // TODO this is a hack to use NULL represent host with not group info
     // Ideally we use database value NULL, but it will break a lot of existing
