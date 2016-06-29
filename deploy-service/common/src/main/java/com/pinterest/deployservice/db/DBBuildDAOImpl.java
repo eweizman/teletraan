@@ -73,14 +73,11 @@ public class DBBuildDAOImpl implements BuildDAO {
     public static final String OLD_BUILDS =
             "FROM builds b LEFT JOIN deploys d on d.build_id = b.build_id " +
                     "GROUP BY b.build_id HAVING max(COALESCE(FROM_UNIXTIME(d.start_date*0.001), " +
-                    "FROM_UNIXTIME(b.publish_date*0.001))) < NOW() - INTERVAL 6 MONTH";
-   /* public static final String GET_OLD_BUILDS =
-            "SELECT b.build_id, FROM_UNIXTIME(b.publish_date*0.001), FROM_UNIXTIME(d.start_date*0.001), " +
-                    "COALESCE(FROM_UNIXTIME(d.start_date*0.001), FROM_UNIXTIME(b.publish_date*0.001)) " + OLD_BUILDS;*/
+                    "FROM_UNIXTIME(b.publish_date*0.001))) < NOW() - INTERVAL ? MONTH";
     public static final String GET_OLD_BUILDS =
            "SELECT b.artifact_url " + OLD_BUILDS;
     public static final String DELETE_OLD_BUILDS =
-            "DELETE " + OLD_BUILDS;
+            "DELETE b " + OLD_BUILDS;
 
     private static final String DELETE_UNUSED_BUILDS =
         "DELETE FROM builds WHERE build_name=? AND publish_date<? "
@@ -196,7 +193,12 @@ public class DBBuildDAOImpl implements BuildDAO {
     @Override
     public List<String> getOldBuilds(int numMonths) throws Exception {
         QueryRunner run = new QueryRunner(this.dataSource);
-        return run.query(GET_OLD_BUILDS, SingleResultSetHandlerFactory.<String>newListObjectHandler());
+        return run.query(GET_OLD_BUILDS, SingleResultSetHandlerFactory.<String>newListObjectHandler(), numMonths);
+    }
+
+    @Override
+    public void deleteOldBuilds(int numMonths) throws Exception {
+        new QueryRunner(dataSource).update(DELETE_OLD_BUILDS, numMonths);
     }
 
     @Override

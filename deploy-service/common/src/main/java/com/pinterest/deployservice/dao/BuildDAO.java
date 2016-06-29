@@ -58,6 +58,8 @@ public interface BuildDAO {
     // Get the artifact urls of builds which are older than numMonths months
     List<String> getOldBuilds(int numMonths) throws Exception;
 
+    void deleteOldBuilds(int numMonths) throws Exception;
+
     // Get all unused builds whose publish time is before timeThreshold
     void deleteUnusedBuilds(String buildName, long timeThreshold, long numOfBuilds) throws Exception;
 

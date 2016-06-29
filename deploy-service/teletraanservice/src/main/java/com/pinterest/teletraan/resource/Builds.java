@@ -20,6 +20,7 @@ import com.pinterest.deployservice.bean.*;
 import com.pinterest.deployservice.buildtags.BuildTagsManager;
 import com.pinterest.deployservice.buildtags.BuildTagsManagerImpl;
 import com.pinterest.deployservice.common.CommonUtils;
+import com.pinterest.deployservice.common.Constants;
 import com.pinterest.deployservice.dao.BuildDAO;
 import com.pinterest.deployservice.dao.TagDAO;
 import com.pinterest.deployservice.scm.SourceControlManager;
@@ -160,7 +161,13 @@ public class Builds {
     @GET
     @Path("/old")
     public List<String> getOldBuilds() throws Exception{
-        return buildDAO.getOldBuilds(6);
+        return buildDAO.getOldBuilds(Constants.DEFAULT_MONTHS_UNTIL_OLD_BUILD);
+    }
+
+    @DELETE
+    @Path("/old")
+    public void deleteOldBuilds() throws Exception{
+        buildDAO.deleteOldBuilds(Constants.DEFAULT_MONTHS_UNTIL_OLD_BUILD);
     }
 
     @POST
