@@ -77,7 +77,7 @@ public class DBBuildDAOImpl implements BuildDAO {
     public static final String GET_OLD_BUILDS =
            "SELECT b.artifact_url " + OLD_BUILDS;
     public static final String DELETE_OLD_BUILDS =
-            "DELETE b " + OLD_BUILDS;
+            "DELETE from builds where build_id in (SELECT build_id from (SELECT b.build_id " + OLD_BUILDS + ") AS combined)";
 
     private static final String DELETE_UNUSED_BUILDS =
         "DELETE FROM builds WHERE build_name=? AND publish_date<? "
