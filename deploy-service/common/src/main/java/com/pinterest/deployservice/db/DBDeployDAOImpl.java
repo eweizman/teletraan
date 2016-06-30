@@ -59,6 +59,11 @@ public class DBDeployDAOImpl implements DeployDAO {
             "SELECT COUNT(*) FROM deploys WHERE env_id=? AND deploy_type IN ('ROLLBACK', 'STOP') AND start_date > ?";
     private static final String COUNT_TOTAL_BY_ENVID =
         "SELECT COUNT(*) FROM deploys WHERE env_id=?";
+
+    public static final String DELETE_OLD_DEPLOYS =
+            "DELETE from deploys where build_id in (SELECT build_id from (SELECT b.build_id " +
+                    DatabaseUtil.OLD_BUILDS_AND_DEPLOYS + ") AS combined)";
+
     private static final String DELETE_UNUSED_DEPLOYS =
         "DELETE FROM deploys WHERE env_id=? AND last_update<? " +
             "AND NOT EXISTS (SELECT 1 FROM environs WHERE environs.deploy_id = deploys.deploy_id) ORDER BY last_update ASC LIMIT ?";

@@ -32,6 +32,12 @@ import java.util.List;
 public class DatabaseUtil {
     public static final int MAX_WAIT_TIME_FOR_CONN_IN_MS = 200;
     public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
+
+    public static final String OLD_BUILDS_AND_DEPLOYS =
+            "FROM builds b LEFT JOIN deploys d on d.build_id = b.build_id " +
+                    "GROUP BY b.build_id HAVING max(COALESCE(FROM_UNIXTIME(d.start_date*0.001), " +
+                    "FROM_UNIXTIME(b.publish_date*0.001))) < NOW() - INTERVAL ? MONTH";
+
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseUtil.class);
 
     public static BasicDataSource createMysqlDataSource(String host, int port,

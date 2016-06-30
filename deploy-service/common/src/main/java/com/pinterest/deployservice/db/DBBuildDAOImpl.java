@@ -70,14 +70,12 @@ public class DBBuildDAOImpl implements BuildDAO {
     private static final String GET_LIST_OF_BUILDS_BY_IDs =
         "" + "SELECT * FROM builds where build_id IN (%s)";
 
-    public static final String OLD_BUILDS =
-            "FROM builds b LEFT JOIN deploys d on d.build_id = b.build_id " +
-                    "GROUP BY b.build_id HAVING max(COALESCE(FROM_UNIXTIME(d.start_date*0.001), " +
-                    "FROM_UNIXTIME(b.publish_date*0.001))) < NOW() - INTERVAL ? MONTH";
+
     public static final String GET_OLD_BUILDS =
-           "SELECT b.artifact_url " + OLD_BUILDS;
+           "SELECT b.artifact_url " + DatabaseUtil.OLD_BUILDS_AND_DEPLOYS;
     public static final String DELETE_OLD_BUILDS =
-            "DELETE from builds where build_id in (SELECT build_id from (SELECT b.build_id " + OLD_BUILDS + ") AS combined)";
+            "DELETE from builds where build_id in (SELECT build_id from (SELECT b.build_id " +
+                    DatabaseUtil.OLD_BUILDS_AND_DEPLOYS + ") AS combined)";
 
     private static final String DELETE_UNUSED_BUILDS =
         "DELETE FROM builds WHERE build_name=? AND publish_date<? "
